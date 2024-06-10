@@ -15,6 +15,7 @@ from PyQt6.QtWidgets import QFileDialog
 from PyQt6.QtCore import Qt, pyqtSignal, QObject, QPoint, QThread, pyqtSlot
 from PyQt6.QtGui import QPainter, QImage, QTextCursor, QPixmap
 
+
 from pyqtgraph.widgets.RawImageWidget import RawImageWidget
 
 import numpy as np
@@ -33,7 +34,8 @@ SCALE = 2
 
 SCALED_SIZE = int(IMG_SIZE[0] / SCALE), int(IMG_SIZE[1] / SCALE)
 
-IMG_FORMAT  = QImage.Format_RGB888
+IMG_FORMAT  = QImage.Format.Format_RGB888
+
 
 CAMERA = 1
 
