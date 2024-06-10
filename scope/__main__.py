@@ -28,7 +28,6 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 #%%
-#import matplotlib.pyplot as plt
 IMG_SIZE    = 2592, 1944 # 640,480 or 1280,720 or 1920,1080
 SCALE = 2
 
@@ -36,8 +35,8 @@ SCALED_SIZE = int(IMG_SIZE[0] / SCALE), int(IMG_SIZE[1] / SCALE)
 
 IMG_FORMAT  = QImage.Format.Format_RGB888
 
-
 CAMERA = 1
+OVERLAY_FILES = ('./images/cal4x.png', './images/cal10x.png',  './images/cal40x.png',  './images/cal100x.png')
 
 def get_mask(file, size=IMG_SIZE):
     cal = cv2.imread(file, cv2.IMREAD_UNCHANGED)
@@ -47,7 +46,6 @@ def get_mask(file, size=IMG_SIZE):
     _, calmask = cv2.threshold(calmask, 50, 255, cv2.THRESH_BINARY)
     return calmask 
 
-OVERLAY_FILES = ('./images/cal4x.png', './images/cal10x.png',  './images/cal40x.png',  './images/cal100x.png')
 OVERLAYS = [get_mask(file) for file in OVERLAY_FILES]
 
 def list_cams():
@@ -101,7 +99,6 @@ class VideoThread(QThread):
     def run(self):
         # capture from web cam
         self.cam.openCamera()
-        
         while self.running:
             ret, cv_img = self.cam.read()
             if ret:
@@ -195,10 +192,7 @@ class App(QtWidgets.QMainWindow):
 
         
     @pyqtSlot(np.ndarray)
-    def update_image(self, cv_img):
-        """Updates the image_label with a new opencv image"""
-    
-        # do processing here
+    def update_image(self, cv_img):    
         if not(self.freeze):
             self.currentImage = cv_img 
     
@@ -212,7 +206,6 @@ class App(QtWidgets.QMainWindow):
         return cv2.addWeighted(cop, self.overlay_alpha, self.currentImage, 1-self.overlay_alpha, 0)
         
     def convert_cv_qt(self, cv_img):
-        """Convert from an opencv image to QPixmap"""
         rgb_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
         h, w, ch = rgb_image.shape
         bytes_per_line = ch * w
@@ -221,7 +214,6 @@ class App(QtWidgets.QMainWindow):
         scale = 0.01 * self.scaleSlider.value()
         
         p = convert_to_Qt_format.scaled(SCALED_SIZE[0], SCALED_SIZE[1], Qt.KeepAspectRatio)
-        # out = QPixmap.fromImage(p)
         return p
 
 if __name__=="__main__":
